@@ -51,12 +51,12 @@ func NewActiveCampaignIntegration(id int, conn *sqlx.DB) (*ActiveCampaignIntegra
 	var apiKey string
 	var apiURL string
 
-	err := getFieldValue(conn, id, "api_key", &apiKey)
+	err := GetFieldValue(conn, id, "api_key", &apiKey)
 	if err != nil {
 		return nil, err
 	}
 
-	err = getFieldValue(conn, id, "api_url", &apiURL)
+	err = GetFieldValue(conn, id, "api_url", &apiURL)
 	if err != nil {
 		return nil, err
 	}

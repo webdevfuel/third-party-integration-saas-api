@@ -54,12 +54,12 @@ func NewConvertKitIntegration(id int, conn *sqlx.DB) (*ConvertKitIntegration, er
 	var apiKey string
 	var apiSecret string
 
-	err := getFieldValue(conn, id, "api_key", &apiKey)
+	err := GetFieldValue(conn, id, "api_key", &apiKey)
 	if err != nil {
 		return nil, err
 	}
 
-	err = getFieldValue(conn, id, "api_secret", &apiSecret)
+	err = GetFieldValue(conn, id, "api_secret", &apiSecret)
 	if err != nil {
 		return nil, err
 	}

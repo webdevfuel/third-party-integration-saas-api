@@ -61,13 +61,28 @@ func NewRequest(method, url string) (*http.Request, error) {
 
 func GetIntegrationApp(id int, conn *sqlx.DB) (string, error) {
 	var app string
-	err := conn.QueryRow("select apps.slug from integrations left join apps on integrations.app_id = apps.id where integrations.id = $1", id).Scan(&app)
+	err := conn.QueryRow(`
+	SELECT
+	    apps.slug
+	FROM
+	    integrations
+	    LEFT JOIN apps ON integrations.app_id = apps.id
+	WHERE
+	    integrations.id = $1`, id).Scan(&app)
 	if err != nil {
 		return "", err
 	}
 	return app, nil
 }
 
-func getFieldValue(conn *sqlx.DB, id int, value string, destination any) error {
-	return conn.QueryRow("select integration_app_field_values.value from integration_app_field_values left join app_fields on integration_app_field_values.app_field_id = app_fields.id where integration_app_field_values.integration_id = $1 and field = $2", id, value).Scan(destination)
+func GetFieldValue(conn *sqlx.DB, id int, value string, destination any) error {
+	return conn.QueryRow(`
+	SELECT
+	    integration_app_field_values.value
+	FROM
+	    integration_app_field_values
+	    LEFT JOIN app_fields ON integration_app_field_values.app_field_id = app_fields.id
+	WHERE
+	    integration_app_field_values.integration_id = $1
+	    AND field = $2`, id, value).Scan(destination)
 }
