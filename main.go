@@ -7,10 +7,16 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/webdevfuel/third-party-integration-saas-api/db"
 	"github.com/webdevfuel/third-party-integration-saas-api/integration"
 )
 
 func main() {
+	conn, err := db.Open()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", func(w http.ResponseWriter, _ *http.Request) {
