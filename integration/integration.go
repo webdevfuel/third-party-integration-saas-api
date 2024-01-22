@@ -3,6 +3,8 @@ package integration
 import (
 	"io"
 	"net/http"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type Tag struct {
@@ -55,4 +57,17 @@ func NewRequest(method, url string) (*http.Request, error) {
 		return nil, err
 	}
 	return resp, nil
+}
+
+func GetIntegrationApp(id int, conn *sqlx.DB) (string, error) {
+	var app string
+	err := conn.QueryRow("select apps.slug from integrations left join apps on integrations.app_id = apps.id where integrations.id = $1", id).Scan(&app)
+	if err != nil {
+		return "", err
+	}
+	return app, nil
+}
+
+func getFieldValue(conn *sqlx.DB, id int, value string, destination any) error {
+	return conn.QueryRow("select integration_app_field_values.value from integration_app_field_values left join app_fields on integration_app_field_values.app_field_id = app_fields.id where integration_app_field_values.integration_id = $1 and field = $2", id, value).Scan(destination)
 }

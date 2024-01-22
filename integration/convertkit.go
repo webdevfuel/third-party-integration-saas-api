@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type ConvertKitIntegration struct {
@@ -49,11 +50,24 @@ func (integration ConvertKitIntegration) UnmarshalTags(data []byte) ([]Tag, erro
 	return tags, nil
 }
 
-func NewConvertKitIntegration() *ConvertKitIntegration {
+func NewConvertKitIntegration(id int, conn *sqlx.DB) (*ConvertKitIntegration, error) {
+	var apiKey string
+	var apiSecret string
+
+	err := getFieldValue(conn, id, "api_key", &apiKey)
+	if err != nil {
+		return nil, err
+	}
+
+	err = getFieldValue(conn, id, "api_secret", &apiSecret)
+	if err != nil {
+		return nil, err
+	}
+
 	return &ConvertKitIntegration{
-		APIKey:    os.Getenv("CONVERTKIT_API_KEY"),
-		APISecret: os.Getenv("CONVERTKIT_API_URL"),
+		APIKey:    apiKey,
+		APISecret: apiSecret,
 		APIURL:    "https://api.convertkit.com",
 		TagsPath:  "/v3/tags",
-	}
+	}, nil
 }
