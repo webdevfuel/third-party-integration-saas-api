@@ -2,7 +2,6 @@ package integration
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/jmoiron/sqlx"
@@ -21,17 +20,16 @@ type ActiveCampaignTags struct {
 	} `json:"tags"`
 }
 
-func (integration ActiveCampaignIntegration) URL() (string, error) {
-	return integration.APIURL, nil
+func (integration ActiveCampaignIntegration) URL() string {
+	return integration.APIURL
 }
 
-func (integration ActiveCampaignIntegration) Authenticate(request *http.Request) error {
+func (integration ActiveCampaignIntegration) Authenticate(request *http.Request) {
 	request.Header.Add("Api-Token", integration.APIKey)
-	return nil
 }
 
-func (integration ActiveCampaignIntegration) GetTagsPath(path string) string {
-	return fmt.Sprintf("%s/%s", path, integration.TagsPath)
+func (integration ActiveCampaignIntegration) GetTagsPath() string {
+	return integration.TagsPath
 }
 
 func (integration ActiveCampaignIntegration) UnmarshalTags(data []byte) ([]Tag, error) {

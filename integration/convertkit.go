@@ -22,19 +22,18 @@ type ConvertKitTags struct {
 	} `json:"tags"`
 }
 
-func (integration ConvertKitIntegration) URL() (string, error) {
-	return integration.APIURL, nil
+func (integration ConvertKitIntegration) URL() string {
+	return integration.APIURL
 }
 
-func (integration ConvertKitIntegration) Authenticate(request *http.Request) error {
+func (integration ConvertKitIntegration) Authenticate(request *http.Request) {
 	query := request.URL.Query()
 	query.Set("api_key", integration.APIKey)
 	request.URL.RawQuery = query.Encode()
-	return nil
 }
 
-func (integration ConvertKitIntegration) GetTagsPath(path string) string {
-	return fmt.Sprintf("%s/%s", path, integration.TagsPath)
+func (integration ConvertKitIntegration) GetTagsPath() string {
+	return integration.TagsPath
 }
 
 func (integration ConvertKitIntegration) UnmarshalTags(data []byte) ([]Tag, error) {

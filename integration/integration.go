@@ -1,6 +1,7 @@
 package integration
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 
@@ -14,27 +15,20 @@ type Tag struct {
 
 type App interface {
 	// HTTP
-	Authenticate(request *http.Request) error
-	URL() (string, error)
+	Authenticate(request *http.Request)
+	URL() string
 	// Tags
-	GetTagsPath(path string) string
+	GetTagsPath() string
 	UnmarshalTags(body []byte) ([]Tag, error)
 }
 
 func GetIntegrationTags(app App) ([]Tag, error) {
-	url, err := app.URL()
+	req, err := NewRequest("GET", app.URL())
 	if err != nil {
 		return []Tag{}, err
 	}
-	req, err := NewRequest("GET", url)
-	if err != nil {
-		return []Tag{}, err
-	}
-	err = app.Authenticate(req)
-	if err != nil {
-		return []Tag{}, err
-	}
-	req.URL.Path = app.GetTagsPath(req.URL.Path)
+	app.Authenticate(req)
+	req.URL.Path = fmt.Sprintf("%s/%s", req.URL.Path, app.GetTagsPath())
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return []Tag{}, err
