@@ -1,0 +1,18 @@
+version: '3'
+tasks:
+  migrate-create:
+    cmds:
+      - 'migrate create -ext sql -dir db/migrations -seq initial {{.CLI_ARGS}}'
+    silent: true
+  migrate-up:
+    cmds:
+      - migrate -database '{{.DATABASE_URL}}' -path db/migrations up
+    requires:
+      vars: [DATABASE_URL]
+    silent: true
+  migrate-down:
+    cmds:
+      - migrate -database '{{.DATABASE_URL}}' -path db/migrations down
+    requires:
+      vars: [DATABASE_URL]
+    silent: true
