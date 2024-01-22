@@ -45,7 +45,9 @@ func (integration ConvertKitIntegration) UnmarshalTags(data []byte) ([]Tag, erro
 	}
 	var tags []Tag
 	for _, tag := range convertKitTags.Tags {
-		tags = append(tags, Tag{ID: fmt.Sprintf("%d", tag.ID), Name: tag.Name})
+		// Redacted to record video, uncomment line
+		// tags = append(tags, Tag{ID: fmt.Sprintf("%d", tag.ID), Name: tag.Name})
+		tags = append(tags, Tag{ID: fmt.Sprintf("%d", tag.ID), Name: "REDACTED"})
 	}
 	return tags, nil
 }

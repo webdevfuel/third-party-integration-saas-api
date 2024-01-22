@@ -42,7 +42,9 @@ func (integration ActiveCampaignIntegration) UnmarshalTags(data []byte) ([]Tag, 
 	}
 	var tags []Tag
 	for _, tag := range activeCampaignTags.Tags {
-		tags = append(tags, Tag{ID: tag.ID, Name: tag.Tag})
+		// Redacted to record video, uncomment line
+		// tags = append(tags, Tag{ID: tag.ID, Name: tag.Tag})
+		tags = append(tags, Tag{ID: tag.ID, Name: "REDACTED"})
 	}
 	return tags, nil
 }
